@@ -17,8 +17,9 @@ A comprehensive Neovim plugin for C project management with build system detecti
   - [:CConfig](#cconfig)
 - [Quick Start](#quick-start)
 - [Configuration](#configuration)
+  - [Setup Function](#setup-function)
   - [Default Keybindings](#default-keybindings)
-  - [Disabling Default Keybindings](#disabling-default-keybindings)
+  - [Customization Examples](#customization-examples)
 - [Storage](#storage)
 - [Examples](#examples)
 - [JSON Configuration Schema](#json-configuration-schema)
@@ -47,10 +48,16 @@ A comprehensive Neovim plugin for C project management with build system detecti
 ```lua
 {
   'michael-duren/neo-c.nvim',
+  ft = 'c',  -- Lazy load on C files
   dependencies = {
     'MunifTanjim/nui.nvim',  -- Optional: for better UI
     'mfussenegger/nvim-dap',  -- Optional: for debugging support
   },
+  config = function()
+    require('neo-c').setup({
+      -- Your custom configuration here (optional)
+    })
+  end,
 }
 ```
 
@@ -59,10 +66,16 @@ A comprehensive Neovim plugin for C project management with build system detecti
 ```lua
 use {
   'michael-duren/neo-c.nvim',
+  ft = 'c',  -- Lazy load on C files
   requires = {
     'MunifTanjim/nui.nvim',  -- Optional: for better UI
     'mfussenegger/nvim-dap',  -- Optional: for debugging support
-  }
+  },
+  config = function()
+    require('neo-c').setup({
+      -- Your custom configuration here (optional)
+    })
+  end,
 }
 ```
 
@@ -198,9 +211,34 @@ Options:
 
 ## Configuration
 
-The plugin works out-of-the-box with sensible defaults. No Lua configuration is required.
+The plugin works out-of-the-box with sensible defaults. No configuration is required.
 
-For projects with custom requirements, use `:CConfig` to adjust settings interactively.
+### Setup Function
+
+To customize the plugin, call `setup()` in your Neovim config:
+
+```lua
+require('neo-c').setup({
+  -- Keybindings configuration
+  keybindings = {
+    enabled = true,  -- Set to false to disable all keybindings
+    run = '<leader>cr',              -- Compile and run current buffer
+    detect = '<leader>cd',           -- Detect build systems
+    build = '<leader>cb',            -- Build project
+    build_and_run = '<leader>cR',   -- Build and run project
+    test = '<leader>ct',             -- Run tests
+    debug = '<leader>cD',            -- Start debugging
+    generate_compile_commands = '<leader>cl',  -- Generate compile_commands.json
+    config = '<leader>cc',           -- Open configuration menu
+  },
+  -- Compiler options for CRun command
+  compiler = {
+    executable = 'gcc',
+    flags = {'-Wall', '-Wextra', '-std=c11'},
+    output_dir = '/tmp/makec',
+  },
+})
+```
 
 ### Default Keybindings
 
@@ -219,23 +257,42 @@ The following keybindings are automatically set when opening C files (`.c` exten
 
 **Note**: These keybindings use `<leader>c` as the prefix (e.g., if your leader is `<Space>`, press `<Space>cr` to run current buffer).
 
-### Disabling Default Keybindings
+### Customization Examples
 
-To disable the default keybindings, add to your Neovim config:
+**Disable all keybindings:**
 
 ```lua
-vim.g.neo_c_disable_keymaps = 1
+require('neo-c').setup({
+  keybindings = {
+    enabled = false,
+  },
+})
 ```
 
-Then set your own keybindings as needed:
+**Use custom keybindings:**
 
 ```lua
-vim.api.nvim_create_autocmd('FileType', {
-  pattern = 'c',
-  callback = function()
-    vim.keymap.set('n', '<F5>', ':CRun<CR>', { buffer = true, desc = 'Compile and run' })
-    -- Add more custom mappings...
-  end
+require('neo-c').setup({
+  keybindings = {
+    run = '<F5>',              -- Press F5 to compile and run
+    build = '<F7>',            -- Press F7 to build project
+    debug = '<F9>',            -- Press F9 to debug
+    test = '<leader>tt',       -- Custom prefix
+    -- Set any binding to false to disable it
+    config = false,            -- Disable :CConfig keybinding
+  },
+})
+```
+
+**Customize compiler settings:**
+
+```lua
+require('neo-c').setup({
+  compiler = {
+    executable = 'clang',      -- Use clang instead of gcc
+    flags = {'-Wall', '-Wextra', '-std=c17', '-O2'},  -- Custom flags
+    output_dir = '/tmp/my-c-builds',  -- Custom output directory
+  },
 })
 
 ## Storage
