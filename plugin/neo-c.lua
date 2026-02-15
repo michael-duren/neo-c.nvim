@@ -21,4 +21,8 @@ vim.api.nvim_create_user_command('CDebug', function()
   require('neo-c.debug').setup_debug()
 end, { desc = 'Start debugging session with auto-configured settings' })
 
+vim.api.nvim_create_user_command('CGenerateCompileCommands', function()
+  require('neo-c.lsp_helper').generate_compile_commands()
+end, { desc = 'Generate compile_commands.json for LSP' })
+
 -- Additional commands will be added in later phases
