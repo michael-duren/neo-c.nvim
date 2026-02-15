@@ -32,3 +32,7 @@ end, { desc = 'Generate compile_commands.json for LSP' })
 vim.api.nvim_create_user_command('CConfig', function()
   require('neo-c.config_ui').show_config_form()
 end, { desc = 'Configure project build and run settings interactively' })
+
+vim.api.nvim_create_user_command('NewCProject', function()
+  require('neo-c.new_project').create_new_project()
+end, { desc = 'Create a new C project with template selection' })

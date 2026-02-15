@@ -17,6 +17,10 @@ M.config = {
     -- LSP and configuration
     generate_compile_commands = '<leader>cl',
     config = '<leader>cc',
+    -- Global keybindings (available everywhere, not just in C buffers)
+    global = {
+      new_project = '<leader>cn',
+    },
   },
   -- Compiler options for CRun
   compiler = {
@@ -46,12 +50,21 @@ end
 function M.setup_keybindings()
   local augroup = vim.api.nvim_create_augroup('NeoCKeybindings', { clear = true })
 
+  -- Setup global keybindings (available everywhere)
+  local global_opts = { noremap = true, silent = true }
+  local kb = M.config.keybindings
+
+  if kb.global and kb.global.new_project then
+    vim.keymap.set('n', kb.global.new_project, ':NewCProject<CR>',
+      vim.tbl_extend('force', global_opts, { desc = 'NewCProject: Create a new C project' }))
+  end
+
+  -- Setup buffer-local keybindings for C files
   vim.api.nvim_create_autocmd('FileType', {
     group = augroup,
     pattern = 'c',
     callback = function()
       local opts = { noremap = true, silent = true, buffer = true }
-      local kb = M.config.keybindings
 
       if kb.run then
         vim.keymap.set('n', kb.run, ':CRun<CR>',

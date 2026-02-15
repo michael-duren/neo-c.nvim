@@ -7,6 +7,7 @@ A comprehensive Neovim plugin for C project management with build system detecti
 - [Features](#features)
 - [Installation](#installation)
 - [Commands](#commands)
+  - [:NewCProject](#newcproject)
   - [:CRun](#crun)
   - [:CDetect](#cdetect)
   - [:CRunProject](#crunproject)
@@ -80,6 +81,48 @@ use {
 ```
 
 ## Commands
+
+### `:NewCProject`
+
+Create a new C project from interactive templates. **Available globally** in Neovim.
+
+```vim
+:NewCProject
+```
+
+Features:
+
+- Interactive project name and location selection
+- Three project templates:
+  - **Simple**: Single `main.c` file for quick prototyping
+  - **CMake**: Modern CMake-based project with src/, include/, and tests/ directories
+  - **Makefile**: Traditional Makefile-based project with organized directory structure
+- Automatically creates README.md with build instructions
+- Option to immediately open the newly created project
+
+Templates include:
+
+**Simple Template:**
+- `main.c` - Single source file
+- `README.md` - Basic documentation
+
+**CMake Template:**
+- `CMakeLists.txt` - CMake configuration with compile_commands.json generation
+- `src/main.c` - Main source file
+- `include/` - Header files directory
+- `tests/CMakeLists.txt` - Test configuration
+- `tests/test_main.c` - Basic test file
+- `README.md` - Build and test instructions
+
+**Makefile Template:**
+- `Makefile` - Complete Makefile with build, run, clean targets
+- `src/` - Source files directory
+- `include/` - Header files directory
+- `obj/` - Object files directory (created during build)
+- `bin/` - Binary output directory
+- `README.md` - Build instructions
+
+**Use case**: Quickly scaffold new C projects with proper structure and build configuration.
 
 ### `:CRun`
 
@@ -230,6 +273,10 @@ require('neo-c').setup({
     debug = '<leader>cD',            -- Start debugging
     generate_compile_commands = '<leader>cl',  -- Generate compile_commands.json
     config = '<leader>cc',           -- Open configuration menu
+    -- Global keybindings (available everywhere, not just in C buffers)
+    global = {
+      new_project = '<leader>cn',   -- Create a new C project
+    },
   },
   -- Compiler options for CRun command
   compiler = {
@@ -241,6 +288,14 @@ require('neo-c').setup({
 ```
 
 ### Default Keybindings
+
+#### Global Keybindings (Available Everywhere)
+
+| Keybinding | Command | Description |
+|------------|---------|-------------|
+| `<leader>cn` | `:NewCProject` | Create a new C project |
+
+#### C Buffer Keybindings (Available in C Files)
 
 The following keybindings are automatically set when opening C files (`.c` extension):
 
@@ -255,7 +310,7 @@ The following keybindings are automatically set when opening C files (`.c` exten
 | `<leader>cl` | `:CGenerateCompileCommands` | Generate compile_commands.json |
 | `<leader>cc` | `:CConfig` | Open configuration menu |
 
-**Note**: These keybindings use `<leader>c` as the prefix (e.g., if your leader is `<Space>`, press `<Space>cr` to run current buffer).
+**Note**: These keybindings use `<leader>c` as the prefix (e.g., if your leader is `<Space>`, press `<Space>cn` to create a new project or `<Space>cr` to run current buffer).
 
 ### Customization Examples
 
@@ -280,6 +335,10 @@ require('neo-c').setup({
     test = '<leader>tt',       -- Custom prefix
     -- Set any binding to false to disable it
     config = false,            -- Disable :CConfig keybinding
+    -- Customize global keybindings
+    global = {
+      new_project = '<leader>np',  -- Custom keybinding for new project
+    },
   },
 })
 ```
