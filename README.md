@@ -19,7 +19,7 @@ A comprehensive Neovim plugin for C project management with build system detecti
 
 ```lua
 {
-  'your-username/neo-c.nvim',
+  'michael-duren/neo-c.nvim',
   dependencies = {
     'MunifTanjim/nui.nvim',  -- Optional: for better UI
     'mfussenegger/nvim-dap',  -- Optional: for debugging support
@@ -31,7 +31,7 @@ A comprehensive Neovim plugin for C project management with build system detecti
 
 ```lua
 use {
-  'your-username/neo-c.nvim',
+  'michael-duren/neo-c.nvim',
   requires = {
     'MunifTanjim/nui.nvim',  -- Optional: for better UI
     'mfussenegger/nvim-dap',  -- Optional: for debugging support
@@ -50,6 +50,7 @@ Detect all build systems in the current project and store configuration.
 ```
 
 Detects:
+
 - CMake projects (CMakeLists.txt)
 - Makefile projects (Makefile)
 
@@ -64,6 +65,7 @@ Build the entire project using the detected build system.
 ```
 
 Features:
+
 - Async execution with vim.loop
 - CMake configure step handled automatically
 - Build errors populate quickfix list
@@ -88,6 +90,7 @@ Run project tests.
 ```
 
 Supports:
+
 - CTest for CMake projects
 - `make test` for Makefile projects
 - Custom test commands via `:CConfig`
@@ -101,6 +104,7 @@ Start a debugging session with auto-configured nvim-dap.
 ```
 
 Features:
+
 - Auto-detects program path from run command
 - Supports GDB and CodeLLDB adapters
 - Saves debug configuration for reuse
@@ -127,6 +131,7 @@ Interactive configuration menu.
 ```
 
 Options:
+
 1. Set build system (for multi-build projects)
 2. Set run command
 3. Set test command
@@ -150,6 +155,7 @@ For projects with custom requirements, use `:CConfig` to adjust settings interac
 ## Storage
 
 Project configurations are stored in:
+
 - Linux/macOS: `~/.local/share/nvim/neo-c/projects/<sha256>.json`
 - Windows: `%LOCALAPPDATA%\nvim-data\neo-c\projects\<sha256>.json`
 
@@ -246,9 +252,11 @@ nvim
 ## Dependencies
 
 ### Required
+
 - Neovim 0.8+ (for vim.json and vim.loop)
 
 ### Optional
+
 - [nui.nvim](https://github.com/MunifTanjim/nui.nvim) - For better UI (falls back to vim.fn.input)
 - [nvim-dap](https://github.com/mfussenegger/nvim-dap) - For debugging support
 - [Bear](https://github.com/rizsotto/Bear) - For compile_commands.json generation with Make
