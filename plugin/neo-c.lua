@@ -13,4 +13,8 @@ vim.api.nvim_create_user_command('CRunProjectRun', function()
   require('neo-c.run').run_project({ run = true })
 end, { desc = 'Build and run the entire project' })
 
+vim.api.nvim_create_user_command('CTest', function()
+  require('neo-c.test').run_tests()
+end, { desc = 'Run project tests' })
+
 -- Additional commands will be added in later phases
