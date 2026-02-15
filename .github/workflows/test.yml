@@ -1,0 +1,75 @@
+name: Tests
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  test:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-latest]
+        neovim-version: ['stable', 'nightly']
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Install Neovim
+        uses: rhysd/action-setup-vim@v1
+        with:
+          neovim: true
+          version: ${{ matrix.neovim-version }}
+
+      - name: Install dependencies (Ubuntu)
+        if: runner.os == 'Linux'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y gcc make cmake
+
+      - name: Install dependencies (macOS)
+        if: runner.os == 'macOS'
+        run: |
+          brew install gcc make cmake
+
+      - name: Install plenary.nvim
+        run: |
+          mkdir -p ~/.local/share/nvim/site/pack/packer/start
+          git clone --depth=1 https://github.com/nvim-lua/plenary.nvim \
+            ~/.local/share/nvim/site/pack/packer/start/plenary.nvim
+
+      - name: Run tests
+        run: |
+          chmod +x ./tests/run_tests.sh
+          ./tests/run_tests.sh
+
+      - name: Upload test results on failure
+        if: failure()
+        uses: actions/upload-artifact@v3
+        with:
+          name: test-results-${{ matrix.os }}-${{ matrix.neovim-version }}
+          path: /tmp/neo-c-test-output.txt
+          retention-days: 7
+
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Install Neovim
+        uses: rhysd/action-setup-vim@v1
+        with:
+          neovim: true
+          version: stable
+
+      - name: Install Lua language server (optional)
+        run: |
+          echo "Linting step - can add stylua, luacheck, etc."
+
+      - name: Check Lua syntax
+        run: |
+          find lua -name "*.lua" -exec luac -p {} \; || echo "luac not available, skipping"

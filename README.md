@@ -26,6 +26,7 @@ A comprehensive Neovim plugin for C project management with build system detecti
 - [JSON Configuration Schema](#json-configuration-schema)
 - [Dependencies](#dependencies)
 - [Architecture](#architecture)
+- [Testing](#testing)
 - [Related Projects](#related-projects)
 - [License](#license)
 - [Contributing](#contributing)
@@ -493,6 +494,41 @@ nvim
 - **Execution Layer**: Async job execution using `vim.loop` (libuv)
 - **UI Layer**: Interactive configuration using nui.nvim with fallback
 - **Integration Layer**: LSP, DAP, and quickfix integration
+
+## Testing
+
+neo-c.nvim includes a comprehensive test suite using [plenary.nvim](https://github.com/nvim-lua/plenary.nvim).
+
+### Running Tests
+
+```bash
+# Run all tests
+make test
+
+# Or directly
+./tests/run_tests.sh
+
+# Run specific test suites
+make test-storage
+make test-utils
+make test-detect
+make test-executor
+```
+
+### Test Coverage
+
+- **storage_spec.lua** (20 tests): Config persistence, JSON serialization, project ID generation
+- **utils_spec.lua** (25 tests): Project root detection, path utilities
+- **detect_spec.lua** (30 tests): Build system detection, target parsing
+- **executor_spec.lua** (28 tests): Async/sync execution, command handling
+
+Total: **103 test cases** covering all core functionality.
+
+See [tests/README.md](tests/README.md) for detailed documentation on writing and running tests.
+
+### CI/CD
+
+Tests run automatically on every push via GitHub Actions across multiple platforms (Ubuntu, macOS) and Neovim versions (stable, nightly).
 
 ## Related Projects
 
