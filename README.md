@@ -17,6 +17,8 @@ A comprehensive Neovim plugin for C project management with build system detecti
   - [:CConfig](#cconfig)
 - [Quick Start](#quick-start)
 - [Configuration](#configuration)
+  - [Default Keybindings](#default-keybindings)
+  - [Disabling Default Keybindings](#disabling-default-keybindings)
 - [Storage](#storage)
 - [Examples](#examples)
 - [JSON Configuration Schema](#json-configuration-schema)
@@ -199,6 +201,42 @@ Options:
 The plugin works out-of-the-box with sensible defaults. No Lua configuration is required.
 
 For projects with custom requirements, use `:CConfig` to adjust settings interactively.
+
+### Default Keybindings
+
+The following keybindings are automatically set when opening C files (`.c` extension):
+
+| Keybinding | Command | Description |
+|------------|---------|-------------|
+| `<leader>cr` | `:CRun` | Compile and run current buffer |
+| `<leader>cd` | `:CDetect` | Detect build systems |
+| `<leader>cb` | `:CRunProject` | Build project |
+| `<leader>cR` | `:CRunProjectRun` | Build and run project |
+| `<leader>ct` | `:CTest` | Run tests |
+| `<leader>cD` | `:CDebug` | Start debugging |
+| `<leader>cl` | `:CGenerateCompileCommands` | Generate compile_commands.json |
+| `<leader>cc` | `:CConfig` | Open configuration menu |
+
+**Note**: These keybindings use `<leader>c` as the prefix (e.g., if your leader is `<Space>`, press `<Space>cr` to run current buffer).
+
+### Disabling Default Keybindings
+
+To disable the default keybindings, add to your Neovim config:
+
+```lua
+vim.g.neo_c_disable_keymaps = 1
+```
+
+Then set your own keybindings as needed:
+
+```lua
+vim.api.nvim_create_autocmd('FileType', {
+  pattern = 'c',
+  callback = function()
+    vim.keymap.set('n', '<F5>', ':CRun<CR>', { buffer = true, desc = 'Compile and run' })
+    -- Add more custom mappings...
+  end
+})
 
 ## Storage
 
