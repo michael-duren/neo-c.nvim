@@ -1,6 +1,10 @@
 if vim.g.loaded_neo_c then return end
 vim.g.loaded_neo_c = true
 
+vim.api.nvim_create_user_command('CRun', function()
+  require('neo-c.quick_run').run_current_buffer()
+end, { desc = 'Compile and run current buffer to /tmp/makec/a.out' })
+
 vim.api.nvim_create_user_command('CDetect', function()
   require('neo-c.detect').detect_build_system()
 end, { desc = 'Detect all build systems in project' })

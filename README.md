@@ -2,6 +2,31 @@
 
 A comprehensive Neovim plugin for C project management with build system detection, execution, testing, and debugging capabilities.
 
+## Table of Contents
+
+- [Features](#features)
+- [Installation](#installation)
+- [Commands](#commands)
+  - [:CRun](#crun)
+  - [:CDetect](#cdetect)
+  - [:CRunProject](#crunproject)
+  - [:CRunProjectRun](#crunprojectrun)
+  - [:CTest](#ctest)
+  - [:CDebug](#cdebug)
+  - [:CGenerateCompileCommands](#cgeneratecompilecommands)
+  - [:CConfig](#cconfig)
+- [Quick Start](#quick-start)
+- [Configuration](#configuration)
+- [Storage](#storage)
+- [Examples](#examples)
+- [JSON Configuration Schema](#json-configuration-schema)
+- [Dependencies](#dependencies)
+- [Architecture](#architecture)
+- [Related Projects](#related-projects)
+- [License](#license)
+- [Contributing](#contributing)
+- [Roadmap](#roadmap)
+
 ## Features
 
 - **Build System Detection**: Automatically detects CMake and Makefile-based projects
@@ -40,6 +65,24 @@ use {
 ```
 
 ## Commands
+
+### `:CRun`
+
+Quick compile and run the current buffer without needing project detection.
+
+```vim
+:CRun
+```
+
+Features:
+- Compiles current C file with `gcc -Wall -Wextra -std=c11`
+- Outputs to `/tmp/makec/a.out`
+- Runs immediately after successful compilation
+- Opens in a split terminal
+- Compilation errors populate quickfix list
+- Perfect for quick testing and single-file programs
+
+**Use case**: When you want to quickly test a single C file without setting up a full project.
 
 ### `:CDetect`
 
@@ -141,6 +184,11 @@ Options:
 
 ## Quick Start
 
+### For Single Files
+1. Open a C file in Neovim
+2. Run `:CRun` to compile and execute immediately
+
+### For Projects
 1. Navigate to a C project with CMake or Makefile
 2. Run `:CDetect` to detect the build system
 3. Run `:CConfig` to set a run command (e.g., `./build/my-project`)
@@ -162,6 +210,29 @@ Project configurations are stored in:
 Each project is identified by SHA256 hash of its path.
 
 ## Examples
+
+### Example: Single C File
+
+```bash
+# Open a simple C file
+nvim hello.c
+```
+
+```vim
+:CRun                             " Compile and run immediately
+```
+
+**hello.c:**
+```c
+#include <stdio.h>
+
+int main(void) {
+    printf("Hello, World!\n");
+    return 0;
+}
+```
+
+After `:CRun`, the program compiles to `/tmp/makec/a.out` and runs in a split terminal.
 
 ### Example: CMake Project
 
