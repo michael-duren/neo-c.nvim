@@ -52,6 +52,28 @@ gcc -Wall -Wextra -std=c11 main.c -o %s
     file:close()
   end
 
+  -- Create .gitignore
+  local gitignore_content = string.format([[# Compiled executable
+%s
+
+# Object files
+*.o
+*.obj
+
+# Editor files
+*.swp
+*.swo
+*~
+.DS_Store
+]], project_name)
+
+  local gitignore_path = project_path .. '/.gitignore'
+  file = io.open(gitignore_path, 'w')
+  if file then
+    file:write(gitignore_content)
+    file:close()
+  end
+
   return true
 end
 
@@ -177,6 +199,35 @@ ctest --test-dir build
     file:close()
   end
 
+  -- Create .gitignore
+  local gitignore_content = [[# Build directory
+build/
+CMakeFiles/
+CMakeCache.txt
+cmake_install.cmake
+compile_commands.json
+
+# Compiled executable (adjust based on project name)
+*.out
+
+# Object files
+*.o
+*.obj
+
+# Editor files
+*.swp
+*.swo
+*~
+.DS_Store
+]]
+
+  local gitignore_path = project_path .. '/.gitignore'
+  file = io.open(gitignore_path, 'w')
+  if file then
+    file:write(gitignore_content)
+    file:close()
+  end
+
   return true
 end
 
@@ -283,6 +334,30 @@ make clean
     file:close()
   end
 
+  -- Create .gitignore
+  local gitignore_content = [[# Build artifacts
+bin/
+obj/
+*.o
+*.obj
+
+# Compiled executable
+*.out
+
+# Editor files
+*.swp
+*.swo
+*~
+.DS_Store
+]]
+
+  local gitignore_path = project_path .. '/.gitignore'
+  file = io.open(gitignore_path, 'w')
+  if file then
+    file:write(gitignore_content)
+    file:close()
+  end
+
   return true
 end
 
@@ -296,8 +371,8 @@ function M.create_new_project()
 
     -- Get project location
     vim.ui.input({
-      prompt = 'Project location (default: ~/projects): ',
-      default = vim.fn.expand('~/projects')
+      prompt = 'Project location (default: current directory): ',
+      default = vim.fn.getcwd()
     }, function(base_path)
       if not base_path or base_path == '' then
         vim.notify('Project creation cancelled', vim.log.levels.INFO)
