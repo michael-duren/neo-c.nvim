@@ -25,4 +25,6 @@ vim.api.nvim_create_user_command('CGenerateCompileCommands', function()
   require('neo-c.lsp_helper').generate_compile_commands()
 end, { desc = 'Generate compile_commands.json for LSP' })
 
--- Additional commands will be added in later phases
+vim.api.nvim_create_user_command('CConfig', function()
+  require('neo-c.config_ui').show_config_form()
+end, { desc = 'Configure project build and run settings interactively' })
