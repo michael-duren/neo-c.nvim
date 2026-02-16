@@ -20,6 +20,7 @@ function M.run_current_buffer()
 	end
 
 	-- Get config from main module
+	--- @type NeoCQuickCompilerConfig
 	local config = require("neo-c").config.compiler
 	local output_dir = config.output_dir
 	local output_file = output_dir .. "/a.out"
@@ -40,14 +41,7 @@ function M.run_current_buffer()
 		args = compile_args,
 	}
 
-	executor.execute_async(compile_cmd, {
-		on_stdout = function(data)
-			print(data)
-		end,
-		on_stderr = function(data)
-			print(data)
-		end,
-	}, function(result)
+	executor.execute_async(compile_cmd, {}, function(result)
 		if result.code ~= 0 then
 			vim.notify("Compilation failed", vim.log.levels.ERROR)
 			-- Populate quickfix with errors
