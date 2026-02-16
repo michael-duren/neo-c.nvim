@@ -83,6 +83,8 @@ use {
 
 ## Commands
 
+<img width="476" height="144" alt="which-key" src="https://github.com/user-attachments/assets/43499795-5226-453d-bda0-6a4a83960b31" />
+
 ### `:NewCProject`
 
 Create a new C project from interactive templates. **Available globally** in Neovim.
@@ -142,6 +144,8 @@ Features:
 - Perfect for quick testing and single-file programs
 
 **Use case**: When you want to quickly test a single C file without setting up a full project.
+
+<img width="746" height="212" alt="quickfix" src="https://github.com/user-attachments/assets/1b9034fa-b1b5-4cae-ad62-43973fd2aaf3" />
 
 ### `:CDetect`
 
