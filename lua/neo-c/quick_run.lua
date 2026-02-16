@@ -2,7 +2,8 @@ local executor = require("neo-c.executor")
 
 local M = {}
 
--- Quick compile and run current buffer
+---Quick compile and run current C file buffer
+---@return nil
 function M.run_current_buffer()
 	local current_file = vim.fn.expand("%:p")
 

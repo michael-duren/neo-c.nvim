@@ -4,7 +4,9 @@ local executor = require('neo-c.executor')
 
 local M = {}
 
--- Parse command string
+---Parse command string into command + args
+---@param cmd_str string # Command string to parse
+---@return NeoCCommand # Parsed command with args
 local function parse_command(cmd_str)
   local parts = vim.split(cmd_str, '%s+')
   return {
@@ -13,7 +15,9 @@ local function parse_command(cmd_str)
   }
 end
 
--- Get selected build system
+---Get selected build system from configuration
+---@param config NeoCConfig # Project configuration
+---@return NeoCBuildSystem|nil # Selected build system or nil if not found
 local function get_selected_build_system(config)
   for _, system in ipairs(config.build_systems) do
     if system.type == config.selected_build_system then
@@ -23,7 +27,8 @@ local function get_selected_build_system(config)
   return nil
 end
 
--- Run tests
+---Run tests using the configured test command
+---@return nil
 function M.run_tests()
   local project_path = utils.find_project_root()
 

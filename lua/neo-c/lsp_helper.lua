@@ -4,7 +4,8 @@ local executor = require('neo-c.executor')
 
 local M = {}
 
--- Generate compile_commands.json
+---Generate compile_commands.json based on the selected build system
+---@return nil
 function M.generate_compile_commands()
   local project_path = utils.find_project_root()
 
@@ -36,7 +37,10 @@ function M.generate_compile_commands()
   end
 end
 
--- CMake: Already includes -DCMAKE_EXPORT_COMPILE_COMMANDS=1 in configure
+---Generate compile_commands.json for CMake projects by symlinking from build directory
+---@param project_path string # Absolute path to project root
+---@param system NeoCBuildSystem # CMake build system configuration
+---@return nil
 function M.generate_cmake_compile_commands(project_path, system)
   local compile_commands_src = project_path .. '/' .. (system.compile_commands_path or 'build/compile_commands.json')
   local compile_commands_dst = project_path .. '/compile_commands.json'
@@ -58,7 +62,10 @@ function M.generate_cmake_compile_commands(project_path, system)
   end
 end
 
--- Make: Use Bear to generate compile_commands.json
+---Generate compile_commands.json for Make projects using Bear
+---@param project_path string # Absolute path to project root
+---@param system NeoCBuildSystem # Make build system configuration
+---@return nil
 function M.generate_make_compile_commands(project_path, system)
   -- Check if Bear is installed
   local bear_check = vim.fn.system('which bear')

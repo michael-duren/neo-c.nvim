@@ -3,10 +3,11 @@ local utils = require("neo-c.utils")
 
 local M = {}
 
--- Check if nui.nvim is available
+---Check if nui.nvim is available
 local has_nui = pcall(require, "nui.input")
 
--- Show configuration form
+---Show configuration form (detects and uses nui.nvim if available, otherwise uses fallback)
+---@return nil
 function M.show_config_form()
 	local project_path = utils.find_project_root()
 
@@ -23,7 +24,10 @@ function M.show_config_form()
 	end
 end
 
--- Simple fallback config form without nui.nvim
+---Simple fallback config form without nui.nvim
+---@param config NeoCConfig # Project configuration
+---@param project_path string # Absolute path to project root
+---@return nil
 function M.show_simple_config_form(config, project_path)
 	print("Neo-C Configuration")
 	print("─────────────────────")
@@ -54,7 +58,10 @@ function M.show_simple_config_form(config, project_path)
 	end
 end
 
--- NUI-based config form
+---NUI-based config form using nui.nvim
+---@param config NeoCConfig # Project configuration
+---@param project_path string # Absolute path to project root
+---@return nil
 function M.show_nui_config_form(config, project_path)
 	local Popup = require("nui.popup")
 
@@ -127,7 +134,12 @@ function M.show_nui_config_form(config, project_path)
 	end)
 end
 
--- Simple fallback functions
+---Simple fallback functions
+
+---Set build system using simple vim.fn.input (fallback without nui.nvim)
+---@param config NeoCConfig # Project configuration
+---@param project_path string # Absolute path to project root
+---@return nil
 function M.set_build_system_simple(config, project_path)
 	if #config.build_systems == 0 then
 		vim.notify("No build systems detected", vim.log.levels.WARN)
@@ -148,6 +160,10 @@ function M.set_build_system_simple(config, project_path)
 	end
 end
 
+---Set run command using simple vim.fn.input (fallback without nui.nvim)
+---@param config NeoCConfig # Project configuration
+---@param project_path string # Absolute path to project root
+---@return nil
 function M.set_run_command_simple(config, project_path)
 	local current = config.custom_commands.run or ""
 	local value = vim.fn.input("Run command: ", current)
@@ -156,6 +172,10 @@ function M.set_run_command_simple(config, project_path)
 	vim.notify("Run command updated", vim.log.levels.INFO)
 end
 
+---Set test command using simple vim.fn.input (fallback without nui.nvim)
+---@param config NeoCConfig # Project configuration
+---@param project_path string # Absolute path to project root
+---@return nil
 function M.set_test_command_simple(config, project_path)
 	local current = config.custom_commands.test or ""
 	local value = vim.fn.input("Test command: ", current)
@@ -164,6 +184,10 @@ function M.set_test_command_simple(config, project_path)
 	vim.notify("Test command updated", vim.log.levels.INFO)
 end
 
+---Set debug program path using simple vim.fn.input (fallback without nui.nvim)
+---@param config NeoCConfig # Project configuration
+---@param project_path string # Absolute path to project root
+---@return nil
 function M.set_debug_program_simple(config, project_path)
 	config.debug_config = config.debug_config or {}
 	local current = config.debug_config.program or ""
@@ -173,6 +197,10 @@ function M.set_debug_program_simple(config, project_path)
 	vim.notify("Debug program updated", vim.log.levels.INFO)
 end
 
+---Set debug adapter using simple vim.fn.input (fallback without nui.nvim)
+---@param config NeoCConfig # Project configuration
+---@param project_path string # Absolute path to project root
+---@return nil
 function M.set_debug_adapter_simple(config, project_path)
 	config.debug_config = config.debug_config or {}
 	local current = config.debug_config.adapter or "gdb"
@@ -186,6 +214,10 @@ function M.set_debug_adapter_simple(config, project_path)
 	end
 end
 
+---Set compiler flags using simple vim.fn.input (fallback without nui.nvim)
+---@param config NeoCConfig # Project configuration
+---@param project_path string # Absolute path to project root
+---@return nil
 function M.set_compiler_flags_simple(config, project_path)
 	local current = table.concat(config.compiler.cflags or {}, " ")
 	local value = vim.fn.input("Compiler flags (space-separated): ", current)
@@ -195,6 +227,10 @@ function M.set_compiler_flags_simple(config, project_path)
 end
 
 -- NUI-based functions
+---Set build system using nui.nvim
+---@param config NeoCConfig # Project configuration
+---@param project_path string # Absolute path to project root
+---@return nil
 function M.set_build_system(config, project_path)
 	if #config.build_systems == 0 then
 		vim.notify("No build systems detected", vim.log.levels.WARN)
@@ -241,6 +277,10 @@ function M.set_build_system(config, project_path)
 	vim.api.nvim_buf_set_lines(input.bufnr, -2, -2, false, vim.split(lines, "\n"))
 end
 
+---Set run command using nui.nvim
+---@param config NeoCConfig # Project configuration
+---@param project_path string # Absolute path to project root
+---@return nil
 function M.set_run_command(config, project_path)
 	local Input = require("nui.input")
 	local current = config.custom_commands.run or ""
@@ -268,6 +308,10 @@ function M.set_run_command(config, project_path)
 	input:mount()
 end
 
+---Set test command using nui.nvim
+---@param config NeoCConfig # Project configuration
+---@param project_path string # Absolute path to project root
+---@return nil
 function M.set_test_command(config, project_path)
 	local Input = require("nui.input")
 	local current = config.custom_commands.test or ""
@@ -295,6 +339,10 @@ function M.set_test_command(config, project_path)
 	input:mount()
 end
 
+---Set debug program path using nui.nvim
+---@param config NeoCConfig # Project configuration
+---@param project_path string # Absolute path to project root
+---@return nil
 function M.set_debug_program(config, project_path)
 	local Input = require("nui.input")
 	config.debug_config = config.debug_config or {}
@@ -323,6 +371,10 @@ function M.set_debug_program(config, project_path)
 	input:mount()
 end
 
+---Set debug adapter using nui.nvim
+---@param config NeoCConfig # Project configuration
+---@param project_path string # Absolute path to project root
+---@return nil
 function M.set_debug_adapter(config, project_path)
 	local Input = require("nui.input")
 	config.debug_config = config.debug_config or {}
@@ -359,6 +411,10 @@ function M.set_debug_adapter(config, project_path)
 	})
 end
 
+---Set compiler flags using nui.nvim
+---@param config NeoCConfig # Project configuration
+---@param project_path string # Absolute path to project root
+---@return nil
 function M.set_compiler_flags(config, project_path)
 	local Input = require("nui.input")
 	local current = table.concat(config.compiler.cflags or {}, " ")

@@ -3,7 +3,8 @@ local utils = require('neo-c.utils')
 
 local M = {}
 
--- Configure nvim-dap for C debugging
+---Configure nvim-dap for C debugging and start a debug session
+---@return nil
 function M.setup_debug()
   local project_path = utils.find_project_root()
 

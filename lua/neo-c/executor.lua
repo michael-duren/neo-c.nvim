@@ -1,6 +1,26 @@
+---@class NeoCCommand
+---@field command string # Command executable name or path
+---@field args? string[] # Command arguments
+---@field cwd? string # Working directory for command execution
+
+---@class NeoCExecuteOptions
+---@field on_stdout? fun(data: string) # Callback for stdout data chunks
+---@field on_stderr? fun(data: string) # Callback for stderr data chunks
+
+---@class NeoCExecutionResult
+---@field code number # Exit code from command
+---@field signal? number # Signal that terminated the process (if any)
+---@field stdout? string # Complete stdout output (async only)
+---@field stderr? string # Complete stderr output (async only)
+---@field output? string # Combined output (sync only)
+
 local M = {}
 
--- Execute command asynchronously with output capture
+---Execute command asynchronously with output capture using libuv
+---@param cmd NeoCCommand # Command to execute
+---@param opts? NeoCExecuteOptions # Execution options with callbacks
+---@param on_complete? fun(result: NeoCExecutionResult) # Callback when execution completes
+---@return nil
 function M.execute_async(cmd, opts, on_complete)
   opts = opts or {}
   local stdout_data = {}
@@ -57,7 +77,9 @@ function M.execute_async(cmd, opts, on_complete)
   end)
 end
 
--- Execute command synchronously (for simple cases)
+---Execute command synchronously using vim.fn.system
+---@param cmd NeoCCommand # Command to execute
+---@return NeoCExecutionResult # Execution result with exit code and output
 function M.execute_sync(cmd)
   local full_cmd = cmd.command
   if cmd.args and #cmd.args > 0 then

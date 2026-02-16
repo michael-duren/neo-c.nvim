@@ -4,7 +4,12 @@ local executor = require('neo-c.executor')
 
 local M = {}
 
--- Parse command string into command + args
+---@class NeoCRunOptions
+---@field run? boolean # Whether to run the program after building
+
+---Parse command string into command + args
+---@param cmd_str string # Command string to parse
+---@return NeoCCommand # Parsed command with args
 local function parse_command(cmd_str)
   local parts = vim.split(cmd_str, '%s+')
   return {
@@ -13,7 +18,9 @@ local function parse_command(cmd_str)
   }
 end
 
--- Get selected build system config
+---Get selected build system config from configuration
+---@param config NeoCConfig # Project configuration
+---@return NeoCBuildSystem|nil # Selected build system or nil if not found
 local function get_selected_build_system(config)
   if not config.selected_build_system then
     return nil
@@ -28,7 +35,11 @@ local function get_selected_build_system(config)
   return nil
 end
 
--- Run build command
+---Run build command for the project
+---@param project_path string # Absolute path to project root
+---@param config NeoCConfig # Project configuration
+---@param on_complete? fun(result: NeoCExecutionResult) # Callback when build completes
+---@return nil
 function M.build_project(project_path, config, on_complete)
   local system = get_selected_build_system(config)
 
@@ -75,7 +86,10 @@ function M.build_project(project_path, config, on_complete)
   end
 end
 
--- Run the built program
+---Run the built program in a terminal split
+---@param project_path string # Absolute path to project root
+---@param config NeoCConfig # Project configuration with run command
+---@return nil
 function M.run_program(project_path, config)
   local run_cmd = config.custom_commands.run
 
@@ -90,7 +104,9 @@ function M.run_program(project_path, config)
   vim.cmd('startinsert')
 end
 
--- Main CRunProject implementation
+---Main CRunProject implementation - builds and optionally runs the project
+---@param opts? NeoCRunOptions # Run options (e.g., whether to run after building)
+---@return nil
 function M.run_project(opts)
   opts = opts or {}
   local project_path = utils.find_project_root()
@@ -130,7 +146,11 @@ function M.run_project(opts)
   end)
 end
 
--- Prompt user to select build system (for multi-build projects)
+---Prompt user to select build system (for multi-build projects)
+---@param config NeoCConfig # Project configuration
+---@param project_path string # Absolute path to project root
+---@param opts? NeoCRunOptions # Run options to pass through after selection
+---@return nil
 function M.prompt_build_system_selection(config, project_path, opts)
   -- Check if nui.nvim is available
   local has_nui, _ = pcall(require, 'nui.input')

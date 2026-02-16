@@ -4,7 +4,14 @@ local utils = require("neo-c.utils")
 
 local M = {}
 
--- Build system definitions with detection patterns
+---@class NeoCBuildSystemDetector
+---@field type "cmake"|"make" # Type of build system
+---@field file string # File to look for (CMakeLists.txt, Makefile, etc.)
+---@field priority number # Detection priority (lower = higher priority)
+---@field detect fun(project_path: string): NeoCBuildSystem|nil # Detection function
+
+---Build system definitions with detection patterns
+---@type NeoCBuildSystemDetector[]
 local build_systems = {
 	{
 		type = "cmake",
@@ -59,14 +66,18 @@ local build_systems = {
 	},
 }
 
--- Extract CMake targets (basic implementation)
+---Extract CMake targets (basic implementation)
+---@param project_path string # Absolute path to project root
+---@return string[] # List of available CMake targets
 function M.get_cmake_targets(project_path)
 	-- Default CMake targets
 	-- TODO: Parse CMakeLists.txt or run cmake --build build --target help
 	return { "all", "clean", "test", "install" }
 end
 
--- Extract Make targets from Makefile
+---Extract Make targets from Makefile by parsing target definitions
+---@param project_path string # Absolute path to project root
+---@return string[] # List of available Make targets
 function M.get_make_targets(project_path)
 	local makefile_path = project_path .. "/Makefile"
 	local targets = {}
@@ -93,7 +104,9 @@ function M.get_make_targets(project_path)
 	return targets
 end
 
--- Detect all build systems in project
+---Detect all build systems in project directory
+---@param project_path string # Absolute path to project root
+---@return NeoCBuildSystem[] # Array of detected build systems, sorted by priority
 function M.detect_all(project_path)
 	local detected = {}
 
@@ -124,7 +137,8 @@ function M.detect_all(project_path)
 	return detected
 end
 
--- Main CDetect command implementation
+---Main CDetect command implementation - detects build systems and saves configuration
+---@return nil
 function M.detect_build_system()
 	local project_path = utils.find_project_root()
 	local project_name = utils.get_project_name(project_path)

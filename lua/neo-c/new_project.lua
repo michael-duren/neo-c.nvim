@@ -1,5 +1,11 @@
 local M = {}
 
+---@class NeoCProjectTemplate
+---@field name string # Template name (e.g., "simple", "cmake", "makefile")
+---@field description string # Human-readable description of the template
+
+---Get available project templates
+---@return NeoCProjectTemplate[] # List of available templates
 local function get_project_templates()
   return {
     { name = 'simple', description = 'Simple C project with single main.c file' },
@@ -8,6 +14,10 @@ local function get_project_templates()
   }
 end
 
+---Create a simple C project with single main.c file
+---@param project_path string # Absolute path to project directory
+---@param project_name string # Name of the project
+---@return boolean # True if project creation succeeded, false otherwise
 local function create_simple_project(project_path, project_name)
   -- Create main.c
   local main_content = string.format([[#include <stdio.h>
@@ -77,6 +87,10 @@ gcc -Wall -Wextra -std=c11 main.c -o %s
   return true
 end
 
+---Create a CMake-based project with modern structure
+---@param project_path string # Absolute path to project directory
+---@param project_name string # Name of the project
+---@return boolean # True if project creation succeeded, false otherwise
 local function create_cmake_project(project_path, project_name)
   -- Create directory structure
   vim.fn.mkdir(project_path .. '/src', 'p')
@@ -231,6 +245,10 @@ compile_commands.json
   return true
 end
 
+---Create a Makefile-based project with src/ and include/ directories
+---@param project_path string # Absolute path to project directory
+---@param project_name string # Name of the project
+---@return boolean # True if project creation succeeded, false otherwise
 local function create_makefile_project(project_path, project_name)
   -- Create directory structure
   vim.fn.mkdir(project_path .. '/src', 'p')
@@ -361,6 +379,8 @@ obj/
   return true
 end
 
+---Create a new C project with interactive template selection
+---@return nil
 function M.create_new_project()
   -- Get project name
   vim.ui.input({ prompt = 'Project name: ' }, function(project_name)

@@ -1,6 +1,31 @@
+---@class NeoCGlobalKeybindings
+---@field new_project? string # Keybinding for creating a new project
+
+---@class NeoCKeybindings
+---@field enabled boolean # Whether keybindings are enabled
+---@field run? string # Quick compile and run current buffer
+---@field detect? string # Detect build systems
+---@field build? string # Build project
+---@field build_and_run? string # Build and run project
+---@field test? string # Run tests
+---@field debug? string # Start debugging
+---@field generate_compile_commands? string # Generate compile_commands.json
+---@field config? string # Open config UI
+---@field global? NeoCGlobalKeybindings # Global keybindings (available everywhere)
+
+---@class NeoCQuickCompilerConfig
+---@field executable string # Compiler executable (e.g., "gcc", "clang")
+---@field flags string[] # Compiler flags
+---@field output_dir string # Directory for compiled output
+
+---@class NeoCPluginConfig
+---@field keybindings NeoCKeybindings # Keybinding configuration
+---@field compiler NeoCQuickCompilerConfig # Quick compiler configuration for CRun
+
 local M = {}
 
--- Default configuration
+---Default configuration
+---@type NeoCPluginConfig
 M.config = {
   -- Default keybindings (set to false to disable all keybindings)
   keybindings = {
@@ -30,7 +55,9 @@ M.config = {
   },
 }
 
--- Setup function to configure the plugin
+---Setup function to configure the plugin
+---@param user_config? NeoCPluginConfig # User configuration (deep merged with defaults)
+---@return nil
 function M.setup(user_config)
   -- Mark that setup has been called
   M._setup_called = true
@@ -46,7 +73,8 @@ function M.setup(user_config)
   end
 end
 
--- Setup keybindings
+---Setup keybindings for the plugin (buffer-local for C files, global for new project)
+---@return nil
 function M.setup_keybindings()
   local augroup = vim.api.nvim_create_augroup('NeoCKeybindings', { clear = true })
 

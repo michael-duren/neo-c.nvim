@@ -59,7 +59,10 @@
 
 local M = {}
 
--- Create a new empty config
+---Create a new empty configuration with default values
+---@param project_path string # Absolute path to project root
+---@param project_name string # Name of the project
+---@return NeoCConfig # New configuration table with defaults
 function M.new_config(project_path, project_name)
   return {
     version = "1.0",
