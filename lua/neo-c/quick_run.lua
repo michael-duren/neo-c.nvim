@@ -55,9 +55,26 @@ function M.run_current_buffer()
 
 		vim.notify("Compilation succeeded! Running...", vim.log.levels.INFO)
 
-		-- Run the compiled program in a terminal
-		vim.cmd("split | terminal " .. output_file)
-		vim.cmd("startinsert")
+		-- Prompt for program arguments
+		vim.ui.input({
+			prompt = "Program arguments (leave empty for none): ",
+			default = "",
+		}, function(args)
+			-- User cancelled
+			if args == nil then
+				return
+			end
+
+			-- Build command with arguments
+			local run_command = output_file
+			if args and args ~= "" then
+				run_command = run_command .. " " .. args
+			end
+
+			-- Run the compiled program in a terminal
+			vim.cmd("split | terminal " .. run_command)
+			vim.cmd("startinsert")
+		end)
 	end)
 end
 
