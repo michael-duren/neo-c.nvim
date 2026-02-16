@@ -106,10 +106,12 @@ Features:
 Templates include:
 
 **Simple Template:**
+
 - `main.c` - Single source file
 - `README.md` - Basic documentation
 
 **CMake Template:**
+
 - `CMakeLists.txt` - CMake configuration with compile_commands.json generation
 - `src/main.c` - Main source file
 - `include/` - Header files directory
@@ -118,6 +120,7 @@ Templates include:
 - `README.md` - Build and test instructions
 
 **Makefile Template:**
+
 - `Makefile` - Complete Makefile with build, run, clean targets
 - `src/` - Source files directory
 - `include/` - Header files directory
@@ -136,6 +139,7 @@ Quick compile and run the current buffer without needing project detection.
 ```
 
 Features:
+
 - Compiles current C file with `gcc -Wall -Wextra -std=c11`
 - Outputs to `/tmp/makec/a.out`
 - Runs immediately after successful compilation
@@ -248,10 +252,12 @@ Options:
 ## Quick Start
 
 ### For Single Files
+
 1. Open a C file in Neovim
 2. Run `:CRun` to compile and execute immediately
 
 ### For Projects
+
 1. Navigate to a C project with CMake or Makefile
 2. Run `:CDetect` to detect the build system
 3. Run `:CConfig` to set a run command (e.g., `./build/my-project`)
@@ -296,24 +302,24 @@ require('neo-c').setup({
 
 #### Global Keybindings (Available Everywhere)
 
-| Keybinding | Command | Description |
-|------------|---------|-------------|
+| Keybinding   | Command        | Description            |
+| ------------ | -------------- | ---------------------- |
 | `<leader>cn` | `:NewCProject` | Create a new C project |
 
 #### C Buffer Keybindings (Available in C Files)
 
 The following keybindings are automatically set when opening C files (`.c` extension):
 
-| Keybinding | Command | Description |
-|------------|---------|-------------|
-| `<leader>cr` | `:CRun` | Compile and run current buffer |
-| `<leader>cd` | `:CDetect` | Detect build systems |
-| `<leader>cb` | `:CRunProject` | Build project |
-| `<leader>cR` | `:CRunProjectRun` | Build and run project |
-| `<leader>ct` | `:CTest` | Run tests |
-| `<leader>cD` | `:CDebug` | Start debugging |
+| Keybinding   | Command                     | Description                    |
+| ------------ | --------------------------- | ------------------------------ |
+| `<leader>cr` | `:CRun`                     | Compile and run current buffer |
+| `<leader>cd` | `:CDetect`                  | Detect build systems           |
+| `<leader>cb` | `:CRunProject`              | Build project                  |
+| `<leader>cR` | `:CRunProjectRun`           | Build and run project          |
+| `<leader>ct` | `:CTest`                    | Run tests                      |
+| `<leader>cD` | `:CDebug`                   | Start debugging                |
 | `<leader>cl` | `:CGenerateCompileCommands` | Generate compile_commands.json |
-| `<leader>cc` | `:CConfig` | Open configuration menu |
+| `<leader>cc` | `:CConfig`                  | Open configuration menu        |
 
 **Note**: These keybindings use `<leader>c` as the prefix (e.g., if your leader is `<Space>`, press `<Space>cn` to create a new project or `<Space>cr` to run current buffer).
 
@@ -358,6 +364,7 @@ require('neo-c').setup({
     output_dir = '/tmp/my-c-builds',  -- Custom output directory
   },
 })
+```
 
 ## Storage
 
@@ -382,6 +389,7 @@ nvim hello.c
 ```
 
 **hello.c:**
+
 ```c
 #include <stdio.h>
 
