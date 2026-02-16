@@ -36,7 +36,9 @@ end
 ---@param project_path string # Absolute path to project directory
 ---@return string # Name of the project (last component of path)
 function M.get_project_name(project_path)
-  return vim.fn.fnamemodify(project_path, ':t')
+  -- Remove trailing slash if present
+  local path = project_path:gsub('/$', '')
+  return vim.fn.fnamemodify(path, ':t')
 end
 
 return M

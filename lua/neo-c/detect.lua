@@ -89,7 +89,8 @@ function M.get_make_targets(project_path)
 
 	for line in file:lines() do
 		-- Match target definitions (simplified regex)
-		local target = line:match("^([%w_-]+):%s")
+		-- Matches target: or target:space/tab or target:anything
+		local target = line:match("^([%w_-]+):")
 		if target and not target:match("^%.") then -- Exclude .PHONY, etc.
 			table.insert(targets, target)
 		end

@@ -263,22 +263,18 @@ uninstall:
     it('should handle no build systems gracefully', function()
       local project_path = temp_dir .. '/no_build'
       vim.fn.mkdir(project_path, 'p')
+      -- Create a marker so find_project_root works
+      helpers.create_test_file(project_path .. '/.git/config', '')
 
       local mock = helpers.mock_vim_notify()
 
-      detect.detect_build_system = function()
-        local utils = require('neo-c.utils')
-        local proj_path = utils.find_project_root(project_path)
-
-        local detected = detect.detect_all(proj_path)
-
-        if #detected == 0 then
-          vim.notify('No build systems detected', vim.log.levels.WARN)
-          return
-        end
-      end
+      -- Change to the project directory so find_project_root() finds it
+      local original_cwd = vim.fn.getcwd()
+      vim.cmd('cd ' .. project_path)
 
       detect.detect_build_system()
+
+      vim.cmd('cd ' .. original_cwd)
 
       local last = mock.get_last()
       assert.is_not_nil(last)

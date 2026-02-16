@@ -26,8 +26,8 @@ function M.execute_async(cmd, opts, on_complete)
 	local stdout_data = {}
 	local stderr_data = {}
 
-	local stdout = vim.loop.new_pipe()
-	local stderr = vim.loop.new_pipe()
+	local stdout = vim.loop.new_pipe(false)
+	local stderr = vim.loop.new_pipe(false)
 
 	local handle
 	handle = vim.loop.spawn(
@@ -91,7 +91,13 @@ end
 function M.execute_sync(cmd)
 	local full_cmd = cmd.command
 	if cmd.args and #cmd.args > 0 then
-		full_cmd = full_cmd .. " " .. table.concat(cmd.args, " ")
+		-- Quote each argument to handle spaces and special characters
+		local quoted_args = {}
+		for _, arg in ipairs(cmd.args) do
+			-- Use vim.fn.shellescape to properly quote arguments
+			table.insert(quoted_args, vim.fn.shellescape(arg))
+		end
+		full_cmd = full_cmd .. " " .. table.concat(quoted_args, " ")
 	end
 
 	local output = vim.fn.system(full_cmd)
